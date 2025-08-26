@@ -2,7 +2,8 @@
 #define GEOMETRYLIB_GEOMETRYLIB_H
 
 
-
+#include "geometrylib_vec.h"
+#include "geometrylib_plane.h"
 
 
 /**
