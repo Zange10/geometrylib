@@ -223,8 +223,8 @@ double root_finder_monot_func_next_x(DataArray2 *arr) {
 		}
 		i_p = i_n-1;
 	}
-	if(i_p == 1 || i_p == num_data ||
-	   i_n == 1 || i_n == num_data) return (arr->data[i_p].x+arr->data[i_n].x) / 2;
+	if(i_p == 0 || i_p == num_data-1 ||
+	   i_n == 0 || i_n == num_data-1) return (arr->data[i_p].x+arr->data[i_n].x) / 2;
 	
 	
 	double m = (arr->data[i_n].y - arr->data[i_p].y) / (arr->data[i_n].x - arr->data[i_p].x);
@@ -248,8 +248,8 @@ double root_finder_monot_deriv_next_x(DataArray2 *arr, int branch) {
 	
 	// left branch
 	if(branch == 0) {
-		index = 1;
-		for(int i = 1; i <= num_data; i++) {
+		index = 0;
+		for(int i = 1; i < num_data; i++) {
 			if(arr->data[i].y < 0)					{ index = i; break; }
 			if(arr->data[i].y > arr->data[i-1].y)	{ break; }
 			else 									{ index = i; }
@@ -270,8 +270,8 @@ double root_finder_monot_deriv_next_x(DataArray2 *arr, int branch) {
 		else 			return (arr->data[index].x + arr->data[index+1].x)/2;
 	}
 	
-	if(index <= 2)			return (arr->data[1].x + arr->data[2].x)/2;
-	if(index >= num_data-1)	return (arr->data[num_data-1].x + arr->data[num_data].x)/2;
+	if(index <= 1)			return (arr->data[0].x + arr->data[1].x)/2;
+	if(index >= num_data-2)	return (arr->data[num_data-2].x + arr->data[num_data-1].x)/2;
 	
 	
 	double gradient_l 	= (arr->data[index  ].y - arr->data[index - 1].y) / (arr->data[index  ].x - arr->data[index - 1].x);
