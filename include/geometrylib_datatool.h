@@ -25,10 +25,10 @@ size_t data_array2_size(DataArray2 *arr);
 size_t data_array3_size(DataArray3 *arr);
 size_t data_arrayn_size(DataArrayN *arr);
 
-double  * get_data_array1(DataArray1 *arr);
-Vector2 * get_data_array2(DataArray2 *arr);
-Vector3 * get_data_array3(DataArray3 *arr);
-double ** get_data_array4(DataArrayN *arr);
+double  * data_array1_get_data(DataArray1 *arr);
+Vector2 * data_array2_get_data(DataArray2 *arr);
+Vector3 * data_array3_get_data(DataArray3 *arr);
+double ** data_arrayn_get_data(DataArrayN *arr);
 
 void data_array1_append_new(DataArray1 *arr, double value);
 void data_array2_append_new(DataArray2 *arr, double x, double y);
@@ -43,4 +43,6 @@ double root_finder_monot_deriv_next_x(DataArray2 *arr, int branch);
 int can_be_negative_monot_deriv(DataArray2 *arr);
 
 void print_data_array2(DataArray2 *arr, const char *x_name, const char *y_name);
+void print_data_array3(DataArray3 *arr, const char *x_name, const char *y_name, const char *z_name);
+void print_data_arrayN(DataArrayN *arr, const char **name);
 #endif //GEOMETRYLIB_GEOMETRYLIB_DATATOOL_H

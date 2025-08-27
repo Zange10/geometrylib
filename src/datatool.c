@@ -41,10 +41,10 @@ size_t data_array2_size(DataArray2 *arr) {return arr->count;}
 size_t data_array3_size(DataArray3 *arr) {return arr->count;}
 size_t data_arrayn_size(DataArrayN *arr) {return arr->count;}
 
-double  * get_data_array1(DataArray1 *arr) {return arr->data;}
-Vector2 * get_data_array2(DataArray2 *arr) {return arr->data;}
-Vector3 * get_data_array3(DataArray3 *arr) {return arr->data;}
-double ** get_data_array4(DataArrayN *arr) {return arr->data;}
+double  * data_array1_get_data(DataArray1 *arr) {return arr->data;}
+Vector2 * data_array2_get_data(DataArray2 *arr) {return arr->data;}
+Vector3 * data_array3_get_data(DataArray3 *arr) {return arr->data;}
+double ** data_arrayn_get_data(DataArrayN *arr) {return arr->data;}
 
 DataArray1 * data_array1_create() {
 	DataArray1* arr = malloc(sizeof(DataArray1));
@@ -149,7 +149,7 @@ void check_data_arrayn_add_capacity(DataArrayN *arr) {
 		size_t new_capacity = arr->capacity * 2;
 		double **new_data = malloc(new_capacity * sizeof(double *));
 		memcpy(new_data, arr->data, arr->count * sizeof(double *));
-		for(int i = (int)arr->count; i < arr->capacity; i++) arr->data[i] = malloc(arr->dimensions*sizeof(double));
+		for(int i = (int)arr->count; i < new_capacity; i++) new_data[i] = malloc(arr->dimensions*sizeof(double));
 		free(arr->data);
 		arr->data = new_data;
 		arr->capacity = new_capacity;
@@ -316,12 +316,42 @@ void print_data_array2(DataArray2 *arr, const char *x_name, const char *y_name) 
 	printf("%s = [", x_name);
 	for(int j = 0; j < arr->count; j++) {
 		if(j!=0) printf(", ");
-		printf("%.4f", arr->data[j].x);
+		printf("%g", arr->data[j].x);
 	}
 	printf("]\n%s = [", y_name);
 	for(int j = 0; j < arr->count; j++) {
 		if(j!=0) printf(", ");
-		printf("%.4f", arr->data[j].y);
+		printf("%g", arr->data[j].y);
 	}
 	printf("]\n");
+}
+
+void print_data_array3(DataArray3 *arr, const char *x_name, const char *y_name, const char *z_name) {
+	printf("%s = [", x_name);
+	for(int j = 0; j < arr->count; j++) {
+		if(j!=0) printf(", ");
+		printf("%g", arr->data[j].x);
+	}
+	printf("]\n%s = [", y_name);
+	for(int j = 0; j < arr->count; j++) {
+		if(j!=0) printf(", ");
+		printf("%g", arr->data[j].y);
+	}
+	printf("]\n%s = [", z_name);
+	for(int j = 0; j < arr->count; j++) {
+		if(j!=0) printf(", ");
+		printf("%g", arr->data[j].z);
+	}
+	printf("]\n");
+}
+
+void print_data_arrayN(DataArrayN *arr, const char **name) {
+	for(int i = 0; i < arr->dimensions; i++) {
+		if(i==0) printf("x%d = [", i);
+		else 	 printf("]\nx%d = [", i);
+		for(int j = 0; j < arr->count; j++) {
+			if(j!=0) printf(", ");
+			printf("%g", arr->data[j][i]);
+		}
+	}
 }
