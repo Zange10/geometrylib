@@ -223,8 +223,8 @@ double root_finder_monot_func_next_x(DataArray2 *arr) {
 		}
 		i_p = i_n-1;
 	}
-	if(i_p == 1 || i_p == num_data ||
-	   i_n == 1 || i_n == num_data) return (arr->data[i_p].x+arr->data[i_n].x) / 2;
+	if(i_p == 0 || i_p == num_data-1 ||
+	   i_n == 0 || i_n == num_data-1) return (arr->data[i_p].x+arr->data[i_n].x) / 2;
 	
 	
 	double m = (arr->data[i_n].y - arr->data[i_p].y) / (arr->data[i_n].x - arr->data[i_p].x);
