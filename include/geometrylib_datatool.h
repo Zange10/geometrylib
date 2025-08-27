@@ -42,4 +42,5 @@ double root_finder_monot_func_next_x(DataArray2 *arr);
 double root_finder_monot_deriv_next_x(DataArray2 *arr, int branch);
 int can_be_negative_monot_deriv(DataArray2 *arr);
 
+void print_data_array2(DataArray2 *arr, const char *x_name, const char *y_name);
 #endif //GEOMETRYLIB_GEOMETRYLIB_DATATOOL_H

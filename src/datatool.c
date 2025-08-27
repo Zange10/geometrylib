@@ -1,5 +1,6 @@
 #include "geometrylib_datatool.h"
 #include <string.h>
+#include <stdio.h>
 
 #define DATA_ARRAY_STACK_LIMIT 128
 
@@ -309,4 +310,18 @@ int can_be_negative_monot_deriv(DataArray2 *arr) {
 	if(gradient*dx +arr-> data[mind].y < 0) return 1;
 	
 	return 0;
+}
+
+void print_data_array2(DataArray2 *arr, const char *x_name, const char *y_name) {
+	printf("%s = [", x_name);
+	for(int j = 0; j <= arr->count; j++) {
+		if(j!=0) printf(", ");
+		printf("%.4f", arr->data[j].x);
+	}
+	printf("]\n%s = [", y_name);
+	for(int j = 0; j <= arr->count; j++) {
+		if(j!=0) printf(", ");
+		printf("%.4f", arr->data[j].y);
+	}
+	printf("]\n");
 }
