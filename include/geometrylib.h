@@ -4,6 +4,7 @@
 
 #include "geometrylib_vec.h"
 #include "geometrylib_plane.h"
+#include "geometrylib_datatool.h"
 
 
 /**
