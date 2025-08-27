@@ -3,8 +3,12 @@ project(geometrylib C)
 
 set(CMAKE_C_STANDARD 11)
 
+include_directories(./include)
+
 add_library(geometrylib STATIC src/geometrylib.c
         src/vec.c
         include/geometrylib_vec.h
         src/plane.c
-        include/geometrylib_plane.h)
+        include/geometrylib_plane.h
+        src/datatool.c
+        include/geometrylib_datatool.h)

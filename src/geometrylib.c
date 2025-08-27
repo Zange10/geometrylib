@@ -1,4 +1,4 @@
-#include "../include/geometrylib.h"
+#include "geometrylib.h"
 #include <math.h>
 
 double deg2rad(double deg) {

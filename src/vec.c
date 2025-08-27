@@ -1,4 +1,4 @@
-#include "../include/geometrylib_vec.h"
+#include "geometrylib_vec.h"
 #include <stdio.h>
 #include <math.h>
 

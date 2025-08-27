@@ -1,4 +1,4 @@
-#include "../include/geometrylib_plane.h"
+#include "geometrylib_plane.h"
 #include <math.h>
 
 
