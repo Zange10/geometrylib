@@ -3,11 +3,7 @@
 
 
 Plane3 constr_plane3(Vector3 loc, Vector3 u, Vector3 v) {
-	Plane3 p;
-	p.loc = loc;
-	p.u = u;
-	p.v = v;
-	return p;
+	return (Plane3) {.loc = loc, .u = u, .v = v};
 }
 
 Vector3 norm_vector_plane3(Plane3 p) {
@@ -18,7 +14,7 @@ double angle_plane3_vec3(Plane3 p, Vector3 v) {
 	return M_PI/2 - angle_vec3_vec3(norm_vector_plane3(p), v);
 }
 
-double angle_plane_plane(Plane3 p1, Plane3 p2) {
+double angle_plane3_plane3(Plane3 p1, Plane3 p2) {
 	return angle_vec3_vec3(norm_vector_plane3(p1), norm_vector_plane3(p2));
 }
 
@@ -50,7 +46,7 @@ Vector3 calc_intersecting_line_dir_plane3(Plane3 p1, Plane3 p2) {
 	return dir;
 }
 
-Vector3 proj_vec_plane(Vector3 v, Plane3 p) {
+Vector3 proj_vec3_plane3(Vector3 v, Plane3 p) {
 	Vector3 n = norm_vector_plane3(p);
 	Vector3 proj_n = proj_vec3_vec3(v,n);
 	return subtract_vec3(v, proj_n);

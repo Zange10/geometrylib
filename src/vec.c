@@ -14,8 +14,7 @@ void print_vec2(Vector2 v) {
 }
 
 Vector2 vec2(double x, double y) {
-	Vector2 v = {x, y};
-	return v;
+	return (Vector2) {.x = x, .y = y};
 }
 
 Vector2 add_vec2(Vector2 v1, Vector2 v2) {
@@ -94,8 +93,7 @@ void print_vec3(Vector3 v) {
 }
 
 Vector3 vec3(double x, double y, double z) {
-	Vector3 v = {x, y, z};
-	return v;
+	return (Vector3) {.x = x, .y = y, .z = z};
 }
 
 Vector3 add_vec3(Vector3 v1, Vector3 v2) {
@@ -128,8 +126,7 @@ double mag_vec3(Vector3 v) {
 }
 
 Vector3 norm_vec3(Vector3 v) {
-	double mag = mag_vec3(v);
-	return scale_vec3(v, 1 / mag);
+	return scale_vec3(v, 1 / mag_vec3(v));
 }
 
 double dot_vec3(Vector3 v1, Vector3 v2) {
@@ -149,8 +146,7 @@ double angle_vec3_vec3(Vector3 v1, Vector3 v2) {
 	// some small imprecisions can lead to acos(1.0000....01) (nan) -> rounding to 1/-1
 	if(acos_part >  1) acos_part = 1;
 	if(acos_part < -1) acos_part = -1;
-	double angle = fabs(acos(acos_part));
-	return angle;
+	return fabs(acos(acos_part));
 }
 
 Vector3 rotate_vector_around_axis(Vector3 v, Vector3 axis, double angle) {
@@ -173,8 +169,8 @@ Vector3 rotate_vector_around_axis(Vector3 v, Vector3 axis, double angle) {
 			rot_v[i] += R[i][j]*v_vec[j];
 		}
 	}
-	Vector3 rotated_vector = {rot_v[0], rot_v[1], rot_v[2]};
-	return rotated_vector;
+	
+	return (Vector3) {rot_v[0], rot_v[1], rot_v[2]};
 }
 
 Vector3 proj_vec3_vec3(Vector3 v1, Vector3 v2) {

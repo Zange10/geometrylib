@@ -51,7 +51,7 @@ double angle_plane3_vec3(Plane3 p, Vector3 v);
  * @param p2 Plane 2
  * @return The angle between the two planes
  */
-double angle_plane_plane(Plane3 p1, Plane3 p2);
+double angle_plane3_plane3(Plane3 p1, Plane3 p2);
 
 
 /**
@@ -71,6 +71,6 @@ Vector3 calc_intersecting_line_dir_plane3(Plane3 p1, Plane3 p2);
  * @param p The plane
  * @return The projection vector
  */
-Vector3 proj_vec_plane(Vector3 v, Plane3 p);
+Vector3 proj_vec3_plane3(Vector3 v, Plane3 p);
 
 #endif //GEOMETRYLIB_GEOMETRYLIB_PLANE_H
