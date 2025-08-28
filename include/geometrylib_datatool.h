@@ -15,6 +15,10 @@ DataArray2 * data_array2_create();
 DataArray3 * data_array3_create();
 DataArrayN * data_arrayn_create(int dimensions);
 
+void data_array1_clear(DataArray1 *arr);
+void data_array2_clear(DataArray2 *arr);
+void data_array3_clear(DataArray3 *arr);
+
 void data_array1_free(DataArray1* arr);
 void data_array2_free(DataArray2* arr);
 void data_array3_free(DataArray3* arr);
