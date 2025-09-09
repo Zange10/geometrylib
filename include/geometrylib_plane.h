@@ -26,6 +26,16 @@ Plane3 constr_plane3(Vector3 loc, Vector3 u, Vector3 v);
 
 
 /**
+ * @brief Constructs a plane with a given location and a given normal vector
+ *
+ * @param loc Location vector
+ * @param n Normal vector
+ * @return The constructed plane
+ */
+Plane3 constr_plane3_from_normal(Vector3 loc, Vector3 n);
+
+
+/**
  * @brief Calculates the normal vector of a plane
  *
  * @param p The given plane

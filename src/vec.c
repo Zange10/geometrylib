@@ -96,6 +96,13 @@ Vector3 vec3(double x, double y, double z) {
 	return (Vector3) {.x = x, .y = y, .z = z};
 }
 
+Vector3 vec3_from_angles(double right_ascension, double declination) {
+	return (Vector3) {
+		.x = cos(right_ascension)*cos(declination),
+		.y = sin(right_ascension)*cos(declination),
+		.z = sin(declination)};
+}
+
 Vector3 add_vec3(Vector3 v1, Vector3 v2) {
 	v1.x += v2.x;
 	v1.y += v2.y;

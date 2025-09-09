@@ -6,6 +6,13 @@ Plane3 constr_plane3(Vector3 loc, Vector3 u, Vector3 v) {
 	return (Plane3) {.loc = loc, .u = u, .v = v};
 }
 
+Plane3 constr_plane3_from_normal(Vector3 loc, Vector3 n) {
+	n = norm_vec3(n);
+	Vector3 u = norm_vec3(cross_vec3(vec3(0,1,0), n));
+	Vector3 v = norm_vec3(cross_vec3(n, u));
+	return (Plane3) {.loc = loc, .u = u, .v = v};
+}
+
 Vector3 norm_vector_plane3(Plane3 p) {
 	return cross_vec3(p.u, p.v);
 }

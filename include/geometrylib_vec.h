@@ -193,6 +193,16 @@ Vector3 vec3(double x, double y, double z);
 
 
 /**
+ * @brief Creates a vector from given right ascension and declination
+ *
+ * @param right_ascension Right Ascension of vector
+ * @param declination Declination of vector
+ * @return A Vector initialized with the given components
+ */
+Vector3 vec3_from_angles(double right_ascension, double declination);
+
+
+/**
  * @brief Adds two vectors and returns the result
  *
  * @param v1 The first vector
