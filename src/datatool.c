@@ -84,7 +84,7 @@ DataArrayN * data_arrayn_create(int dimensions) {
 }
 
 void data_array1_clear(DataArray1 *arr) {
-	if(arr->using_heap) free(arr);
+	if(arr->using_heap) free(arr->data);
 	arr->data = arr->stack_buffer;
 	arr->count = 0;
 	arr->capacity = DATA_ARRAY_STACK_LIMIT;
@@ -92,7 +92,7 @@ void data_array1_clear(DataArray1 *arr) {
 }
 
 void data_array2_clear(DataArray2 *arr) {
-	if(arr->using_heap) free(arr);
+	if(arr->using_heap) free(arr->data);
 	arr->data = arr->stack_buffer;
 	arr->count = 0;
 	arr->capacity = DATA_ARRAY_STACK_LIMIT;
@@ -100,7 +100,7 @@ void data_array2_clear(DataArray2 *arr) {
 }
 
 void data_array3_clear(DataArray3 *arr) {
-	if(arr->using_heap) free(arr);
+	if(arr->using_heap) free(arr->data);
 	arr->data = arr->stack_buffer;
 	arr->count = 0;
 	arr->capacity = DATA_ARRAY_STACK_LIMIT;
