@@ -40,6 +40,7 @@ size_t data_array1_size(DataArray1 *arr) {return arr->count;}
 size_t data_array2_size(DataArray2 *arr) {return arr->count;}
 size_t data_array3_size(DataArray3 *arr) {return arr->count;}
 size_t data_arrayn_size(DataArrayN *arr) {return arr->count;}
+size_t data_arrayn_num_dimensions(DataArrayN *arr) {return arr->dimensions;}
 
 double  * data_array1_get_data(DataArray1 *arr) {return arr->data;}
 Vector2 * data_array2_get_data(DataArray2 *arr) {return arr->data;}

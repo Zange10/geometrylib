@@ -167,6 +167,14 @@ size_t data_array3_size(DataArray3 *arr);
  */
 size_t data_arrayn_size(DataArrayN *arr);
 
+/**
+ * @brief Returns the number of dimensions in an N-dimensional array
+ *
+ * @param arr Pointer to the N-dimensional array
+ * @return Number of dimensions
+ */
+size_t data_arrayn_num_dimensions(DataArrayN *arr);
+
 /*
  * ------------------------------------
  * Get Data
