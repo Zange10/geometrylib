@@ -75,7 +75,7 @@ DataArray3 * data_array3_create() {
 }
 
 DataArrayN * data_arrayn_create(int dimensions) {
-	DataArrayN* arr = malloc(sizeof(DataArray3));
+	DataArrayN* arr = malloc(sizeof(DataArrayN));
 	arr->data = malloc(DATA_ARRAY_STACK_LIMIT*sizeof(double*));
 	arr->dimensions = dimensions;
 	arr->count = 0;
@@ -85,6 +85,7 @@ DataArrayN * data_arrayn_create(int dimensions) {
 }
 
 void data_array1_clear(DataArray1 *arr) {
+	if(!arr) return;
 	if(arr->using_heap) free(arr->data);
 	arr->data = arr->stack_buffer;
 	arr->count = 0;
@@ -93,6 +94,7 @@ void data_array1_clear(DataArray1 *arr) {
 }
 
 void data_array2_clear(DataArray2 *arr) {
+	if(!arr) return;
 	if(arr->using_heap) free(arr->data);
 	arr->data = arr->stack_buffer;
 	arr->count = 0;
@@ -101,11 +103,22 @@ void data_array2_clear(DataArray2 *arr) {
 }
 
 void data_array3_clear(DataArray3 *arr) {
+	if(!arr) return;
 	if(arr->using_heap) free(arr->data);
 	arr->data = arr->stack_buffer;
 	arr->count = 0;
 	arr->capacity = DATA_ARRAY_STACK_LIMIT;
 	arr->using_heap = false;
+}
+
+void data_arrayn_clear(DataArrayN *arr) {
+	if(!arr) return;
+	for(int i = 0; i < arr->capacity; i++) free(arr->data[i]);
+	free(arr->data);
+	arr->data = malloc(DATA_ARRAY_STACK_LIMIT*sizeof(double*));
+	arr->count = 0;
+	arr->capacity = DATA_ARRAY_STACK_LIMIT;
+	for(int i = 0; i < arr->capacity; i++) arr->data[i] = malloc(arr->dimensions*sizeof(double));
 }
 
 void data_array1_free(DataArray1* arr) {
@@ -127,7 +140,7 @@ void data_array3_free(DataArray3* arr) {
 }
 
 void data_arrayn_free(DataArrayN* arr) {
-	if (!arr) return;
+	if(!arr) return;
 	for(int i = 0; i < arr->capacity; i++) free(arr->data[i]);
 	free(arr->data);
 	free(arr);

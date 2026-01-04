@@ -95,6 +95,13 @@ void data_array2_clear(DataArray2 *arr);
  */
 void data_array3_clear(DataArray3 *arr);
 
+/**
+ * @brief Clears the contents of an n-dimensional array
+ *
+ * @param arr Pointer to the n-dimensional array to clear
+ */
+void data_arrayn_clear(DataArrayN *arr);
+
 /*
  * ------------------------------------
  * Destroying
