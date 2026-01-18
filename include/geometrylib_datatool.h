@@ -274,7 +274,18 @@ void data_arrayn_append_new_from_pointers(DataArrayN *arr, double **p_values);
  * ------------------------------------
  * Insert (Sorted)
  * ------------------------------------
+*/
+
+/**
+ * @brief Inserts a new value into a 1-dimensional array while preserving sorted order
+ *
+ * Assumes the values in the array are sorted in ascending order and inserts
+ * the new value at the correct position to maintain that order.
+ *
+ * @param arr Pointer to the 1-dimensional array
+ * @param value component of the new entry
  */
+void data_array1_insert_new(DataArray1 *arr, double value);
 
 /**
  * @brief Inserts a new (x, y) entry into a 2-dimensional array while preserving sorted order
@@ -293,7 +304,15 @@ void data_array2_insert_new(DataArray2 *arr, double x, double y);
  * ------------------------------------
  * Print Arrays
  * ------------------------------------
+*/
+
+/**
+ * @brief Prints a 1-dimensional array with named components
+ *
+ * @param arr Pointer to the 1-dimensional array
+ * @param x_name Name to display for the data
  */
+void print_data_array1(DataArray1 *arr, const char *x_name);
 
 /**
  * @brief Prints a 2-dimensional array with named components

@@ -222,6 +222,26 @@ void data_arrayn_append_new_from_pointers(DataArrayN *arr, double **p_values) {
 }
 
 
+void data_array1_insert_new(DataArray1 *arr, double value) {
+	check_data_array1_add_capacity(arr);
+	size_t insert_index = arr->count;
+
+	for (size_t i = 0; i < arr->count; i++) {
+		if (arr->data[i] > value) {
+			insert_index = i; break;
+		}
+	}
+
+	if (insert_index < arr->count) {
+		memmove(&arr->data[insert_index + 1],
+				&arr->data[insert_index],
+				(arr->count - insert_index) * sizeof(double));
+	}
+
+	arr->data[insert_index] = value;
+	arr->count++;
+}
+
 void data_array2_insert_new(DataArray2 *arr, double x, double y) {
 	check_data_array2_add_capacity(arr);
 	size_t insert_index = arr->count;
@@ -348,6 +368,15 @@ int can_be_negative_monot_deriv(DataArray2 *arr) {
 	if(gradient*dx +arr-> data[mind].y < 0) return 1;
 	
 	return 0;
+}
+
+void print_data_array1(DataArray1 *arr, const char *x_name) {
+	printf("%s = [", x_name);
+	for(int j = 0; j < arr->count; j++) {
+		if(j!=0) printf(", ");
+		printf("%g", arr->data[j]);
+	}
+	printf("]\n");
 }
 
 void print_data_array2(DataArray2 *arr, const char *x_name, const char *y_name) {
