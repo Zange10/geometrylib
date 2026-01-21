@@ -1,3 +1,5 @@
+#include <math.h>
+
 #include "geometrylib_datatool.h"
 #include <string.h>
 #include <stdio.h>
@@ -261,6 +263,20 @@ void data_array2_insert_new(DataArray2 *arr, double x, double y) {
 	arr->data[insert_index] = (Vector2){x, y};
 	arr->count++;
 }
+
+double interpolate_from_sorted_data_array(DataArray2 *data_array, double x) {
+	Vector2 *data = data_array2_get_data(data_array);
+	size_t num_data = data_array2_size(data_array);
+	if(x < data[0].x || x > data[num_data-1].x) return NAN;
+	int idx = 0;
+	while(idx < num_data-2 && data[idx + 1].x < x) idx++;
+
+	Vector2 p0 = data[idx], p1 = data[idx + 1];
+
+	double m = (p1.y-p0.y) / (p1.x-p0.x);
+	return (x-p0.x) * m + p0.y;
+}
+
 
 double root_finder_monot_func_next_x(DataArray2 *arr) {
 	// branch = 0 for decreasing monotonously, 1 for increasing monotonously
