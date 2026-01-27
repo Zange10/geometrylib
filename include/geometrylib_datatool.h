@@ -299,7 +299,44 @@ void data_array1_insert_new(DataArray1 *arr, double value);
  */
 void data_array2_insert_new(DataArray2 *arr, double x, double y);
 
- 
+
+/*
+ * ------------------------------------
+ * Remove
+ * ------------------------------------
+*/
+
+/**
+ * @brief Removes element from 1-dimensional array at index
+ *
+ * This will keep the array sorted if sorted before
+ *
+ * @param arr Pointer to the 1-dimensional array
+ * @param idx Index of element to remove
+ */
+void data_array1_remove_at_idx(DataArray1 *arr, int idx);
+
+/**
+ * @brief Removes element from 2-dimensional array at index
+ *
+ * This will keep the array sorted if sorted before
+ *
+ * @param arr Pointer to the 2-dimensional array
+ * @param idx Index of element to remove
+ */
+void data_array2_remove_at_idx(DataArray2 *arr, int idx);
+
+/**
+ * @brief Removes element from 3-dimensional array at index
+ *
+ * This will keep the array sorted if sorted before
+ *
+ * @param arr Pointer to the 3-dimensional array
+ * @param idx Index of element to remove
+ */
+void data_array3_remove_at_idx(DataArray3 *arr, int idx);
+
+
  /*
  * ------------------------------------
  * Print Arrays
@@ -340,6 +377,97 @@ void print_data_array3(DataArray3 *arr, const char *x_name, const char *y_name, 
  * @param name Array of names for each component
  */
 void print_data_arrayN(DataArrayN *arr, const char **name);
+
+
+/*
+* ------------------------------------
+* Min/Max
+* ------------------------------------
+*/
+
+/**
+ * @brief Returns the maximum value in a 1-dimensional array
+ *
+ * @param arr Pointer to the 1-dimensional array
+ * @return The maximum value, or NAN if the array is NULL or empty
+ */
+double data_array1_get_max(DataArray1 *arr);
+
+/**
+ * @brief Returns the minimum value in a 1-dimensional array
+ *
+ * @param arr Pointer to the 1-dimensional array
+ * @return The minimum value, or NAN if the array is NULL or empty
+ */
+double data_array1_get_min(DataArray1 *arr);
+
+/**
+ * @brief Returns the component-wise maximum vector in a 2-dimensional array
+ *
+ * @param arr Pointer to the 2-dimensional array
+ * @return Vector containing the maximum x and y components,
+ *         or vec2(NAN, NAN) if the array is NULL or empty
+ */
+Vector2 data_array2_get_max(DataArray2 *arr);
+
+/**
+ * @brief Returns the component-wise minimum vector in a 2-dimensional array
+ *
+ * @param arr Pointer to the 2-dimensional array
+ * @return Vector containing the minimum x and y components,
+ *         or vec2(NAN, NAN) if the array is NULL or empty
+ */
+Vector2 data_array2_get_min(DataArray2 *arr);
+
+/**
+ * @brief Returns the component-wise maximum vector in a 3-dimensional array
+ *
+ * @param arr Pointer to the 3-dimensional array
+ * @return Vector containing the maximum x, y, and z components,
+ *         or vec3(NAN, NAN, NAN) if the array is NULL or empty
+ */
+Vector3 data_array3_get_max(DataArray3 *arr);
+
+/**
+ * @brief Returns the component-wise minimum vector in a 3-dimensional array
+ *
+ * @param arr Pointer to the 3-dimensional array
+ * @return Vector containing the minimum x, y, and z components,
+ *         or vec3(NAN, NAN, NAN) if the array is NULL or empty
+ */
+Vector3 data_array3_get_min(DataArray3 *arr);
+
+
+/*
+ * ------------------------------------
+ * Difference and Gradient
+ * ------------------------------------
+ */
+
+/**
+ * @brief Computes the difference between consecutive elements in a 1-dimensional array
+ *
+ * The resulting array will have one fewer element than the input array.
+ * Each element is calculated as arr[i+1] - arr[i].
+ *
+ * @param arr Pointer to the 1-dimensional array
+ * @return A newly allocated DataArray1 containing the differences,
+ *         or NULL if the input array is NULL
+ */
+DataArray1 * data_array1_get_diff(DataArray1 *arr);
+
+/**
+ * @brief Computes the gradient between consecutive elements in a 2-dimensional array
+ *
+ * For each consecutive pair of elements, the x component of the gradient is
+ * the midpoint of the x values, and the y component is the slope (Δy / Δx).
+ * The resulting array will have one fewer element than the input array.
+ *
+ * @param arr Pointer to the 2-dimensional array
+ * @return A newly allocated DataArray2 containing the gradients,
+ *         or NULL if the input array is NULL
+ */
+DataArray2 * data_array2_get_gradient(DataArray2 *arr);
 
 
 /*

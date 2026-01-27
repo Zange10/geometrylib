@@ -264,6 +264,106 @@ void data_array2_insert_new(DataArray2 *arr, double x, double y) {
 	arr->count++;
 }
 
+void data_array1_remove_at_idx(DataArray1 *arr, int idx) {
+	if(!arr || idx < 0 || idx >= arr->count) return;
+	memmove(arr->data+idx, arr->data+idx+1, (arr->count-idx-1) * sizeof(double));
+	arr->count--;
+}
+
+void data_array2_remove_at_idx(DataArray2 *arr, int idx) {
+	if(!arr || idx < 0 || idx >= arr->count) return;
+	memmove(arr->data+idx, arr->data+idx+1, (arr->count-idx-1) * sizeof(Vector2));
+	arr->count--;
+}
+
+void data_array3_remove_at_idx(DataArray3 *arr, int idx) {
+	if(!arr || idx < 0 || idx >= arr->count) return;
+	memmove(arr->data+idx, arr->data+idx+1, (arr->count-idx-1) * sizeof(Vector3));
+	arr->count--;
+}
+
+double data_array1_get_max(DataArray1 *arr) {
+	if(!arr || arr->count == 0) return NAN;
+	double max = arr->data[0];
+	for(int i = 1; i < arr->count; i++) {
+		if(max < arr->data[i]) max = arr->data[i];
+	}
+	return max;
+}
+
+double data_array1_get_min(DataArray1 *arr) {
+	if(!arr || arr->count == 0) return NAN;
+	double min = arr->data[0];
+	for(int i = 1; i < arr->count; i++) {
+		if(min > arr->data[i]) min = arr->data[i];
+	}
+	return min;
+}
+
+Vector2 data_array2_get_max(DataArray2 *arr) {
+	if(!arr || arr->count == 0) return vec2(NAN, NAN);
+	Vector2 max = arr->data[0];
+	for(int i = 1; i < arr->count; i++) {
+		if(max.x < arr->data[i].x) max.x = arr->data[i].x;
+		if(max.y < arr->data[i].y) max.y = arr->data[i].y;
+	}
+	return max;
+}
+
+Vector2 data_array2_get_min(DataArray2 *arr) {
+	if(!arr || arr->count == 0) return vec2(NAN, NAN);
+	Vector2 min = arr->data[0];
+	for(int i = 1; i < arr->count; i++) {
+		if(min.x > arr->data[i].x) min.x = arr->data[i].x;
+		if(min.y > arr->data[i].y) min.y = arr->data[i].y;
+	}
+	return min;
+}
+
+Vector3 data_array3_get_max(DataArray3 *arr) {
+	if(!arr || arr->count == 0) return vec3(NAN, NAN, NAN);
+	Vector3 max = arr->data[0];
+	for(int i = 1; i < arr->count; i++) {
+		if(max.x < arr->data[i].x) max.x = arr->data[i].x;
+		if(max.y < arr->data[i].y) max.y = arr->data[i].y;
+		if(max.z < arr->data[i].z) max.z = arr->data[i].z;
+	}
+	return max;
+}
+
+Vector3 data_array3_get_min(DataArray3 *arr) {
+	if(!arr || arr->count == 0) return vec3(NAN, NAN, NAN);
+	Vector3 min = arr->data[0];
+	for(int i = 1; i < arr->count; i++) {
+		if(min.x > arr->data[i].x) min.x = arr->data[i].x;
+		if(min.y > arr->data[i].y) min.y = arr->data[i].y;
+		if(min.z > arr->data[i].z) min.z = arr->data[i].z;
+	}
+	return min;
+}
+
+DataArray1 * data_array1_get_diff(DataArray1 *arr) {
+	if(!arr) return NULL;
+	DataArray1 *diff = data_array1_create();
+
+	for(int i = 0; i < arr->count-1; i++) {
+		data_array1_append_new(diff, arr->data[i+1]-arr->data[i]);
+	}
+
+	return diff;
+}
+
+DataArray2 * data_array2_get_gradient(DataArray2 *arr) {
+	if(!arr) return NULL;
+	DataArray2 *gradient = data_array2_create();
+
+	for(int i = 0; i < arr->count-1; i++) {
+		data_array2_append_new(gradient, (arr->data[i].x+arr->data[i+1].x)/2, (arr->data[i+1].y-arr->data[i].y)/(arr->data[i+1].x-arr->data[i].x));
+	}
+
+	return gradient;
+}
+
 double interpolate_from_sorted_data_array(DataArray2 *data_array, double x) {
 	Vector2 *data = data_array2_get_data(data_array);
 	size_t num_data = data_array2_size(data_array);
