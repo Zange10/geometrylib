@@ -79,42 +79,38 @@ Vector2 proj_vec2_vec2(Vector2 v1, Vector2 v2) {
 	return scale_vec2(v2, dot_vec2(v1,v2));
 }
 
-int are_lines_intersecting2(Vector2 u0, Vector2 u1, Vector2 v0, Vector2 v1) {
+double orientation2(Vector2 a, Vector2 b, Vector2 c) {
+	return determinant2(subtract_vec2(b,a), subtract_vec2(c,a));
+}
+
+int on_segment2(Vector2 a, Vector2 b, Vector2 p) {
+	return fmin(a.x, b.x) <= p.x && p.x <= fmax(a.x, b.x) &&
+		   fmin(a.y, b.y) <= p.y && p.y <= fmax(a.y, b.y);
+}
+
+int are_line_segments_intersecting2(Vector2 u0, Vector2 u1, Vector2 v0, Vector2 v1) {
+	// outside each others bounding boxes
 	if(u0.x < fmin(v0.x, v1.x) && u1.x < fmin(v0.x, v1.x)) return 0;
 	if(u0.x > fmax(v0.x, v1.x) && u1.x > fmax(v0.x, v1.x)) return 0;
 	if(u0.y < fmin(v0.y, v1.y) && u1.y < fmin(v0.y, v1.y)) return 0;
 	if(u0.y > fmax(v0.y, v1.y) && u1.y > fmax(v0.y, v1.y)) return 0;
 
-	if(u0.x == u1.x) {
-		if(v0.x == v1.x) return 1;
+	// get orientations with each other
+	double o1 = orientation2(u0, u1, v0);
+	double o2 = orientation2(u0, u1, v1);
+	double o3 = orientation2(v0, v1, u0);
+	double o4 = orientation2(v0, v1, u1);
 
-		double m_v = (v1.y - v0.y) / (v1.x - v0.x);
-		double n_v = v0.y - m_v*v0.x;
-		double y_v = m_v*u0.x + n_v;
+	// Normal intersection
+	if ((o1 > 0 != o2 > 0) && (o3 > 0 != o4 > 0)) return 1;
 
-		if(y_v == u0.y || y_v == u1.y) return 1;
-		return y_v > u0.y != y_v > u1.y;
-	}
+	// Collinear / touching cases
+	if (o1 == 0 && on_segment2(u0, u1, v0)) return 1;
+	if (o2 == 0 && on_segment2(u0, u1, v1)) return 1;
+	if (o3 == 0 && on_segment2(v0, v1, u0)) return 1;
+	if (o4 == 0 && on_segment2(v0, v1, u1)) return 1;
 
-	if(v0.x == v1.x) {
-		double m_u = (u1.y - u0.y) / (u1.x - u0.x);
-		double n_u = u0.y - m_u*u0.x;
-		double y_u = m_u*u0.x + n_u;
-
-		if(y_u == v0.y || y_u == v1.y) return 1;
-		return y_u > v0.y != y_u > v1.y;
-	}
-
-	double m_v = (v1.y - v0.y) / (v1.x - v0.x);
-	double n_v = v0.y - m_v*v0.x;
-	double m_u = (u1.y - u0.y) / (u1.x - u0.x);
-	double n_u = u0.y - m_u*u0.x;
-
-	if(m_v == 0 && m_u == 0) return 1;
-
-	double x_inters = (n_u-n_v) / (m_v-m_u);
-	if(x_inters == v0.x || x_inters == v1.x) return 1;
-	return x_inters > v0.x != x_inters > v1.x;
+	return 0;
 }
 
 
