@@ -1,3 +1,5 @@
+#include <math.h>
+
 #include "geometrylib_datatool.h"
 #include <string.h>
 #include <stdio.h>
@@ -40,6 +42,7 @@ size_t data_array1_size(DataArray1 *arr) {return arr->count;}
 size_t data_array2_size(DataArray2 *arr) {return arr->count;}
 size_t data_array3_size(DataArray3 *arr) {return arr->count;}
 size_t data_arrayn_size(DataArrayN *arr) {return arr->count;}
+size_t data_arrayn_num_dimensions(DataArrayN *arr) {return arr->dimensions;}
 
 double  * data_array1_get_data(DataArray1 *arr) {return arr->data;}
 Vector2 * data_array2_get_data(DataArray2 *arr) {return arr->data;}
@@ -74,7 +77,7 @@ DataArray3 * data_array3_create() {
 }
 
 DataArrayN * data_arrayn_create(int dimensions) {
-	DataArrayN* arr = malloc(sizeof(DataArray3));
+	DataArrayN* arr = malloc(sizeof(DataArrayN));
 	arr->data = malloc(DATA_ARRAY_STACK_LIMIT*sizeof(double*));
 	arr->dimensions = dimensions;
 	arr->count = 0;
@@ -84,6 +87,7 @@ DataArrayN * data_arrayn_create(int dimensions) {
 }
 
 void data_array1_clear(DataArray1 *arr) {
+	if(!arr) return;
 	if(arr->using_heap) free(arr->data);
 	arr->data = arr->stack_buffer;
 	arr->count = 0;
@@ -92,6 +96,7 @@ void data_array1_clear(DataArray1 *arr) {
 }
 
 void data_array2_clear(DataArray2 *arr) {
+	if(!arr) return;
 	if(arr->using_heap) free(arr->data);
 	arr->data = arr->stack_buffer;
 	arr->count = 0;
@@ -100,11 +105,22 @@ void data_array2_clear(DataArray2 *arr) {
 }
 
 void data_array3_clear(DataArray3 *arr) {
+	if(!arr) return;
 	if(arr->using_heap) free(arr->data);
 	arr->data = arr->stack_buffer;
 	arr->count = 0;
 	arr->capacity = DATA_ARRAY_STACK_LIMIT;
 	arr->using_heap = false;
+}
+
+void data_arrayn_clear(DataArrayN *arr) {
+	if(!arr) return;
+	for(int i = 0; i < arr->capacity; i++) free(arr->data[i]);
+	free(arr->data);
+	arr->data = malloc(DATA_ARRAY_STACK_LIMIT*sizeof(double*));
+	arr->count = 0;
+	arr->capacity = DATA_ARRAY_STACK_LIMIT;
+	for(int i = 0; i < arr->capacity; i++) arr->data[i] = malloc(arr->dimensions*sizeof(double));
 }
 
 void data_array1_free(DataArray1* arr) {
@@ -126,7 +142,7 @@ void data_array3_free(DataArray3* arr) {
 }
 
 void data_arrayn_free(DataArrayN* arr) {
-	if (!arr) return;
+	if(!arr) return;
 	for(int i = 0; i < arr->capacity; i++) free(arr->data[i]);
 	free(arr->data);
 	free(arr);
@@ -208,6 +224,26 @@ void data_arrayn_append_new_from_pointers(DataArrayN *arr, double **p_values) {
 }
 
 
+void data_array1_insert_new(DataArray1 *arr, double value) {
+	check_data_array1_add_capacity(arr);
+	size_t insert_index = arr->count;
+
+	for (size_t i = 0; i < arr->count; i++) {
+		if (arr->data[i] > value) {
+			insert_index = i; break;
+		}
+	}
+
+	if (insert_index < arr->count) {
+		memmove(&arr->data[insert_index + 1],
+				&arr->data[insert_index],
+				(arr->count - insert_index) * sizeof(double));
+	}
+
+	arr->data[insert_index] = value;
+	arr->count++;
+}
+
 void data_array2_insert_new(DataArray2 *arr, double x, double y) {
 	check_data_array2_add_capacity(arr);
 	size_t insert_index = arr->count;
@@ -227,6 +263,120 @@ void data_array2_insert_new(DataArray2 *arr, double x, double y) {
 	arr->data[insert_index] = (Vector2){x, y};
 	arr->count++;
 }
+
+void data_array1_remove_at_idx(DataArray1 *arr, int idx) {
+	if(!arr || idx < 0 || idx >= arr->count) return;
+	memmove(arr->data+idx, arr->data+idx+1, (arr->count-idx-1) * sizeof(double));
+	arr->count--;
+}
+
+void data_array2_remove_at_idx(DataArray2 *arr, int idx) {
+	if(!arr || idx < 0 || idx >= arr->count) return;
+	memmove(arr->data+idx, arr->data+idx+1, (arr->count-idx-1) * sizeof(Vector2));
+	arr->count--;
+}
+
+void data_array3_remove_at_idx(DataArray3 *arr, int idx) {
+	if(!arr || idx < 0 || idx >= arr->count) return;
+	memmove(arr->data+idx, arr->data+idx+1, (arr->count-idx-1) * sizeof(Vector3));
+	arr->count--;
+}
+
+double data_array1_get_max(DataArray1 *arr) {
+	if(!arr || arr->count == 0) return NAN;
+	double max = arr->data[0];
+	for(int i = 1; i < arr->count; i++) {
+		if(max < arr->data[i]) max = arr->data[i];
+	}
+	return max;
+}
+
+double data_array1_get_min(DataArray1 *arr) {
+	if(!arr || arr->count == 0) return NAN;
+	double min = arr->data[0];
+	for(int i = 1; i < arr->count; i++) {
+		if(min > arr->data[i]) min = arr->data[i];
+	}
+	return min;
+}
+
+Vector2 data_array2_get_max(DataArray2 *arr) {
+	if(!arr || arr->count == 0) return vec2(NAN, NAN);
+	Vector2 max = arr->data[0];
+	for(int i = 1; i < arr->count; i++) {
+		if(max.x < arr->data[i].x) max.x = arr->data[i].x;
+		if(max.y < arr->data[i].y) max.y = arr->data[i].y;
+	}
+	return max;
+}
+
+Vector2 data_array2_get_min(DataArray2 *arr) {
+	if(!arr || arr->count == 0) return vec2(NAN, NAN);
+	Vector2 min = arr->data[0];
+	for(int i = 1; i < arr->count; i++) {
+		if(min.x > arr->data[i].x) min.x = arr->data[i].x;
+		if(min.y > arr->data[i].y) min.y = arr->data[i].y;
+	}
+	return min;
+}
+
+Vector3 data_array3_get_max(DataArray3 *arr) {
+	if(!arr || arr->count == 0) return vec3(NAN, NAN, NAN);
+	Vector3 max = arr->data[0];
+	for(int i = 1; i < arr->count; i++) {
+		if(max.x < arr->data[i].x) max.x = arr->data[i].x;
+		if(max.y < arr->data[i].y) max.y = arr->data[i].y;
+		if(max.z < arr->data[i].z) max.z = arr->data[i].z;
+	}
+	return max;
+}
+
+Vector3 data_array3_get_min(DataArray3 *arr) {
+	if(!arr || arr->count == 0) return vec3(NAN, NAN, NAN);
+	Vector3 min = arr->data[0];
+	for(int i = 1; i < arr->count; i++) {
+		if(min.x > arr->data[i].x) min.x = arr->data[i].x;
+		if(min.y > arr->data[i].y) min.y = arr->data[i].y;
+		if(min.z > arr->data[i].z) min.z = arr->data[i].z;
+	}
+	return min;
+}
+
+DataArray1 * data_array1_get_diff(DataArray1 *arr) {
+	if(!arr) return NULL;
+	DataArray1 *diff = data_array1_create();
+
+	for(int i = 0; i < arr->count-1; i++) {
+		data_array1_append_new(diff, arr->data[i+1]-arr->data[i]);
+	}
+
+	return diff;
+}
+
+DataArray2 * data_array2_get_gradient(DataArray2 *arr) {
+	if(!arr) return NULL;
+	DataArray2 *gradient = data_array2_create();
+
+	for(int i = 0; i < arr->count-1; i++) {
+		data_array2_append_new(gradient, (arr->data[i].x+arr->data[i+1].x)/2, (arr->data[i+1].y-arr->data[i].y)/(arr->data[i+1].x-arr->data[i].x));
+	}
+
+	return gradient;
+}
+
+double interpolate_from_sorted_data_array(DataArray2 *data_array, double x) {
+	Vector2 *data = data_array2_get_data(data_array);
+	size_t num_data = data_array2_size(data_array);
+	if(x < data[0].x || x > data[num_data-1].x) return NAN;
+	int idx = 0;
+	while(idx < num_data-2 && data[idx + 1].x < x) idx++;
+
+	Vector2 p0 = data[idx], p1 = data[idx + 1];
+
+	double m = (p1.y-p0.y) / (p1.x-p0.x);
+	return (x-p0.x) * m + p0.y;
+}
+
 
 double root_finder_monot_func_next_x(DataArray2 *arr) {
 	// branch = 0 for decreasing monotonously, 1 for increasing monotonously
@@ -334,6 +484,15 @@ int can_be_negative_monot_deriv(DataArray2 *arr) {
 	if(gradient*dx +arr-> data[mind].y < 0) return 1;
 	
 	return 0;
+}
+
+void print_data_array1(DataArray1 *arr, const char *x_name) {
+	printf("%s = [", x_name);
+	for(int j = 0; j < arr->count; j++) {
+		if(j!=0) printf(", ");
+		printf("%g", arr->data[j]);
+	}
+	printf("]\n");
 }
 
 void print_data_array2(DataArray2 *arr, const char *x_name, const char *y_name) {
