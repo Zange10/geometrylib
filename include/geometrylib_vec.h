@@ -153,6 +153,20 @@ double determinant2(Vector2 v1, Vector2 v2);
 Vector2 proj_vec2_vec2(Vector2 v1, Vector2 v2);
 
 
+/**
+ * @brief Determines whether two lines are intersecting
+*
+ * @param u0 First position of first line
+ * @param u1 Second position of first line
+ * @param v0 First position of second line
+ * @param v1 Second position of second line
+ * @return 1 if lines are intersecting, 0 if lines are not touching
+ */
+int are_lines_intersecting2(Vector2 u0, Vector2 u1, Vector2 v0, Vector2 v1);
+
+
+
+
 
 
 
