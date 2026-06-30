@@ -282,6 +282,36 @@ void data_array3_remove_at_idx(DataArray3 *arr, int idx) {
 	arr->count--;
 }
 
+bool data_array1_remove_by_value(DataArray1 *arr, double val) {
+	for(int i = 0; i < arr->count; i++) {
+		if(arr->data[i] == val) {
+			data_array1_remove_at_idx(arr, i);
+			return true;
+		}
+	}
+	return false;
+}
+
+bool data_array2_remove_by_value(DataArray2 *arr, Vector2 val) {
+	for(int i = 0; i < arr->count; i++) {
+		if(arr->data[i].x == val.x && arr->data[i].y == val.y) {
+			data_array2_remove_at_idx(arr, i);
+			return true;
+		}
+	}
+	return false;
+}
+
+bool data_array3_remove_by_value(DataArray3 *arr, Vector3 val) {
+	for(int i = 0; i < arr->count; i++) {
+		if(arr->data[i].x == val.x && arr->data[i].y == val.y && arr->data[i].z == val.z) {
+			data_array3_remove_at_idx(arr, i);
+			return true;
+		}
+	}
+	return false;
+}
+
 double data_array1_get_max(DataArray1 *arr) {
 	if(!arr || arr->count == 0) return NAN;
 	double max = arr->data[0];

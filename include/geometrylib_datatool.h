@@ -336,6 +336,39 @@ void data_array2_remove_at_idx(DataArray2 *arr, int idx);
  */
 void data_array3_remove_at_idx(DataArray3 *arr, int idx);
 
+/**
+ * @brief Removes element from 1-dimensional array with value if found
+ *
+ * This will keep the array sorted if sorted before
+ *
+ * @param arr Pointer to the 1-dimensional array
+ * @param val Value of element to remove
+ * @return True if value was found and removed
+ */
+bool data_array1_remove_by_value(DataArray1 *arr, double val);
+
+/**
+ * @brief Removes element from 2-dimensional array with value if found
+ *
+ * This will keep the array sorted if sorted before
+ *
+ * @param arr Pointer to the 2-dimensional array
+ * @param val Value of element to remove
+ * @return True if value was found and removed
+ */
+bool data_array2_remove_by_value(DataArray2 *arr, Vector2 val);
+
+/**
+ * @brief Removes element from 3-dimensional array with value if found
+ *
+ * This will keep the array sorted if sorted before
+ *
+ * @param arr Pointer to the 3-dimensional array
+ * @param val Value of element to remove
+ * @return True if value was found and removed
+ */
+bool data_array3_remove_by_value(DataArray3 *arr, Vector3 val);
+
 
  /*
  * ------------------------------------
