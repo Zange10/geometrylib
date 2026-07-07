@@ -270,6 +270,30 @@ void data_arrayn_append_new_from_values(DataArrayN *arr, double *values);
  */
 void data_arrayn_append_new_from_pointers(DataArrayN *arr, double **p_values);
 
+
+/*
+ * ------------------------------------
+ * Search (Sorted)
+ * ------------------------------------
+*/
+
+/**
+ * @brief Returns first index that is bigger than or equal to value
+ *
+ * @param arr Pointer to the 1-dimensional array
+ * @param value Reference value to look for
+ */
+int data_array1_idx_from_binary_search(DataArray1 *arr, double value);
+
+/**
+ * @brief Returns first index that is bigger than or equal to value (first in x, then in y)
+ *
+ * @param arr Pointer to the 2-dimensional array
+ * @param value Reference Vector to look for (if y-value is NAN, returns first value with x)
+ */
+int data_array2_idx_from_binary_search(DataArray2 *arr, Vector2 value);
+
+
 /*
  * ------------------------------------
  * Insert (Sorted)
@@ -410,6 +434,13 @@ void print_data_array3(DataArray3 *arr, const char *x_name, const char *y_name, 
  * @param name Array of names for each component
  */
 void print_data_arrayN(DataArrayN *arr, const char **name);
+
+/**
+ * @brief Prints Min, First Quartile, Median, Third Quartile, Max and Average of sorted 1-dimensional array
+ *
+ * @param arr Pointer to the 1-dimensional array
+ */
+void print_data_array1_boxplot(DataArray1 *arr);
 
 
 /*

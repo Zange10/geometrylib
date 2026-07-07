@@ -223,16 +223,62 @@ void data_arrayn_append_new_from_pointers(DataArrayN *arr, double **p_values) {
 	arr->count++;
 }
 
+int data_array1_idx_from_binary_search(DataArray1 *arr, double value) {
+	if(!arr->data || arr->count == 0) return 0;
+	if(value <= arr->data[0]) return 0;
+	if(value > arr->data[arr->count - 1]) return (int) arr->count;
+
+	int idx0 = 0, idx1 = (int) arr->count - 1;
+
+	while(idx0 != idx1) {
+		// + 1 to ceil and not floor if necessary (first idx already checked, last index not)
+		int idx_m = (idx0 + idx1 + 1)/2;
+		if(value <= arr->data[idx_m] && value > arr->data[idx_m-1]) return idx_m;
+
+		if(value > arr->data[idx_m]) idx0 = idx_m;
+		else idx1 = idx_m;
+	}
+
+	return 0;
+}
+
+int data_array2_idx_from_binary_search(DataArray2 *arr, Vector2 value) {
+	if(!arr->data || arr->count == 0) return 0;
+	if(value.x < arr->data[0].x) return 0;
+	if(value.x > arr->data[arr->count - 1].x) return (int) arr->count;
+
+	int ins_idx = -1;
+	if(value.x == arr->data[0].x) ins_idx = 0;
+
+	int idx0 = 0, idx1 = (int) arr->count - 1;
+
+	while(ins_idx < 0) {
+		// + 1 to ceil and not floor if necessary (first idx already checked, last index not)
+		int idx_m = (idx0 + idx1 + 1)/2;
+		if(value.x <= arr->data[idx_m].x && value.x > arr->data[idx_m-1].x) {
+			ins_idx = idx_m;
+		}
+
+		if(value.x > arr->data[idx_m].x) idx0 = idx_m;
+		else idx1 = idx_m;
+	}
+
+	if(value.x != arr->data[ins_idx].x) return ins_idx;
+
+	// y values are not binary search as last value of x = value.x is unknown
+	while(ins_idx < arr->count) {
+		if(arr->data[ins_idx].x == value.x && arr->data[ins_idx].y < value.y) {
+			ins_idx++;
+		} else break;
+	}
+
+	return ins_idx;
+}
 
 void data_array1_insert_new(DataArray1 *arr, double value) {
 	check_data_array1_add_capacity(arr);
-	size_t insert_index = arr->count;
 
-	for (size_t i = 0; i < arr->count; i++) {
-		if (arr->data[i] > value) {
-			insert_index = i; break;
-		}
-	}
+	int insert_index = data_array1_idx_from_binary_search(arr, value);
 
 	if (insert_index < arr->count) {
 		memmove(&arr->data[insert_index + 1],
@@ -246,13 +292,8 @@ void data_array1_insert_new(DataArray1 *arr, double value) {
 
 void data_array2_insert_new(DataArray2 *arr, double x, double y) {
 	check_data_array2_add_capacity(arr);
-	size_t insert_index = arr->count;
-	
-	for (size_t i = 0; i < arr->count; i++) {
-		if (arr->data[i].x > x) {
-			insert_index = i; break;
-		}
-	}
+
+	int insert_index = data_array2_idx_from_binary_search(arr, vec2(x, y));
 	
 	if (insert_index < arr->count) {
 		memmove(&arr->data[insert_index + 1],
@@ -283,21 +324,21 @@ void data_array3_remove_at_idx(DataArray3 *arr, int idx) {
 }
 
 bool data_array1_remove_by_value(DataArray1 *arr, double val) {
-	for(int i = 0; i < arr->count; i++) {
-		if(arr->data[i] == val) {
-			data_array1_remove_at_idx(arr, i);
-			return true;
-		}
+	int rm_idx = data_array1_idx_from_binary_search(arr, val);
+	if(rm_idx >= arr->count) return false;
+	if(arr->data[rm_idx] == val) {
+		data_array1_remove_at_idx(arr, rm_idx);
+		return true;
 	}
 	return false;
 }
 
 bool data_array2_remove_by_value(DataArray2 *arr, Vector2 val) {
-	for(int i = 0; i < arr->count; i++) {
-		if(arr->data[i].x == val.x && arr->data[i].y == val.y) {
-			data_array2_remove_at_idx(arr, i);
-			return true;
-		}
+	int rm_idx = data_array2_idx_from_binary_search(arr, val);
+	if(rm_idx >= arr->count) return false;
+	if(arr->data[rm_idx].x == val.x && arr->data[rm_idx].y == val.y) {
+		data_array2_remove_at_idx(arr, rm_idx);
+		return true;
 	}
 	return false;
 }
@@ -568,3 +609,19 @@ void print_data_arrayN(DataArrayN *arr, const char **name) {
 		}
 	}
 }
+
+void print_data_array1_boxplot(DataArray1 *arr) {
+	double min = arr->data[0];
+	double q1 = arr->data[arr->count/4];
+	double med = arr->data[arr->count/2];
+	double q3 = arr->data[arr->count/4*3];
+	double max = arr->data[arr->count-1];
+
+	double sum = 0;
+	for(int i = 0; i < arr->count; i++) sum += arr->data[i];
+	double avg = sum / (double) arr->count;
+
+	printf("Min: %f | Q1: %f | Median: %f | Q3: %f | Max: %f   (Avg: %f)\n",
+		min, q1, med, q3, max, avg);
+}
+
