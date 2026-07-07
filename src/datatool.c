@@ -201,14 +201,14 @@ void data_array1_append_new(DataArray1 *arr, double value) {
 	arr->data[arr->count++] = value;
 }
 
-void data_array2_append_new(DataArray2 *arr, double x, double y) {
+void data_array2_append_new(DataArray2 *arr, Vector2 value) {
 	check_data_array2_add_capacity(arr);
-	arr->data[arr->count++] = (Vector2){x,y};
+	arr->data[arr->count++] = value;
 }
 
-void data_array3_append_new(DataArray3 *arr, double x, double y, double z) {
+void data_array3_append_new(DataArray3 *arr, Vector3 value) {
 	check_data_array3_add_capacity(arr);
-	arr->data[arr->count++] = (Vector3){x,y,z};
+	arr->data[arr->count++] = value;
 }
 
 void data_arrayn_append_new_from_values(DataArrayN *arr, double *values) {
@@ -290,10 +290,10 @@ void data_array1_insert_new(DataArray1 *arr, double value) {
 	arr->count++;
 }
 
-void data_array2_insert_new(DataArray2 *arr, double x, double y) {
+void data_array2_insert_new(DataArray2 *arr, Vector2 value) {
 	check_data_array2_add_capacity(arr);
 
-	int insert_index = data_array2_idx_from_binary_search(arr, vec2(x, y));
+	int insert_index = data_array2_idx_from_binary_search(arr, value);
 	
 	if (insert_index < arr->count) {
 		memmove(&arr->data[insert_index + 1],
@@ -301,7 +301,7 @@ void data_array2_insert_new(DataArray2 *arr, double x, double y) {
 				(arr->count - insert_index) * sizeof(Vector2));
 	}
 	
-	arr->data[insert_index] = (Vector2){x, y};
+	arr->data[insert_index] = value;
 	arr->count++;
 }
 

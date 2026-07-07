@@ -239,20 +239,17 @@ void data_array1_append_new(DataArray1 *arr, double value);
  * @brief Appends a new (x, y) entry to a 2-dimensional array
  *
  * @param arr Pointer to the 2-dimensional array
- * @param x X component
- * @param y Y component
+ * @param value New entry to append
  */
-void data_array2_append_new(DataArray2 *arr, double x, double y);
+void data_array2_append_new(DataArray2 *arr, Vector2 value);
 
 /**
  * @brief Appends a new (x, y, z) entry to a 3-dimensional array
  *
  * @param arr Pointer to the 3-dimensional array
- * @param x X component
- * @param y Y component
- * @param z Z component
+ * @param value New entry to append
  */
-void data_array3_append_new(DataArray3 *arr, double x, double y, double z);
+void data_array3_append_new(DataArray3 *arr, Vector3 value);
 
 /**
  * @brief Appends a new entry to an N-dimensional array using value array
@@ -307,7 +304,7 @@ int data_array2_idx_from_binary_search(DataArray2 *arr, Vector2 value);
  * the new value at the correct position to maintain that order.
  *
  * @param arr Pointer to the 1-dimensional array
- * @param value component of the new entry
+ * @param value New entry to insert
  */
 void data_array1_insert_new(DataArray1 *arr, double value);
 
@@ -318,10 +315,9 @@ void data_array1_insert_new(DataArray1 *arr, double value);
  * the new (x, y) pair at the correct position to maintain that order.
  *
  * @param arr Pointer to the 2-dimensional array
- * @param x X component of the new entry
- * @param y Y component of the new entry
+ * @param value New entry to insert
  */
-void data_array2_insert_new(DataArray2 *arr, double x, double y);
+void data_array2_insert_new(DataArray2 *arr, Vector2 value);
 
 
 /*
