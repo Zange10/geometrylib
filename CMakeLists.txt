@@ -11,4 +11,10 @@ add_library(geometrylib STATIC src/geometrylib.c
         src/plane.c
         include/geometrylib_plane.h
         src/datatool.c
-        include/geometrylib_datatool.h)
+        include/geometrylib_datatool.h
+        src/linetool.c
+        include/geometrylib_linetool.h
+        src/data_array_def.h
+        include/geometrylib_calculus.h
+        src/calculus.c
+)

@@ -5,6 +5,8 @@
 #include "geometrylib_vec.h"
 #include "geometrylib_plane.h"
 #include "geometrylib_datatool.h"
+#include "geometrylib_linetool.h"
+#include "geometrylib_calculus.h"
 
 
 /**
