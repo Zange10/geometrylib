@@ -10,9 +10,33 @@
  * ------------------------------------
  */
 
-double get_y_value_from_x_value_of_line(Vector2 p0, Vector2 p1, double y);
+/**
+ * @brief Interpolates/Extrapolates y-value from given line and x-value
+ *
+ * @param p0 Point on line
+ * @param p1 Point on line
+ * @param x x-value to get the y-value for
+ * @return Inter-/Extrapolated y-value
+ */
+double get_y_value_from_x_value_of_line(Vector2 p0, Vector2 p1, double x);
 
+/**
+ * @brief Interpolates/Extrapolates x-value from given line and y-value
+ *
+ * @param p0 Point on line
+ * @param p1 Point on line
+ * @param y y-value to get the x-value for
+ * @return Inter-/Extrapolated x-value
+ */
 double get_x_value_from_y_value_of_line(Vector2 p0, Vector2 p1, double y);
+
+/**
+ * @brief Finds the root in a 2-dimensional data array that has one root
+ *
+ * @param arr Pointer to the 2-dimensional array
+ * @return Determined root
+ */
+double get_single_root_of_line_array(DataArray2 *arr);
 
 
 /*

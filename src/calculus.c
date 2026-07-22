@@ -17,6 +17,19 @@ double get_x_value_from_y_value_of_line(Vector2 p0, Vector2 p1, double y) {
 	return x;
 }
 
+double get_single_root_of_line_array(DataArray2 *arr) {
+	if(!arr || arr->data[0].y > 0 == arr->data[arr->count-1].y > 0) return NAN;
+	int idx0 = 0, idx1 = (int) arr->count-1;
+
+	while(idx1-idx0 > 1) {
+		int idx_m = (idx0 + idx1)/2;
+		if(arr->data[idx_m].y < 0 == arr->data[idx0].y < 0) idx0 = idx_m;
+		else idx1 = idx_m;
+	}
+
+	return get_x_value_from_y_value_of_line(arr->data[idx0], arr->data[idx1], 0);
+}
+
 DataArray1 * data_array1_get_diff(DataArray1 *arr) {
 	if(!arr) return NULL;
 	DataArray1 *diff = data_array1_create();
@@ -94,6 +107,8 @@ int get_idx_of_unimodal_func_minimum(DataArray2 *arr) {
 		else idx1 = idx_m;
 	}
 
+	if(idx_min < 0) idx_min = arr->data[idx0].y < arr->data[idx1].y ? idx0 : idx1;
+
 	return idx_min;
 }
 
@@ -102,19 +117,21 @@ int get_idx_of_unimodal_func_maximum(DataArray2 *arr) {
 	if(arr->count == 1 || arr->data[0].y > arr->data[1].y) return 0;
 	if(arr->data[arr->count-1].y > arr->data[arr->count-2].y) return (int) arr->count-1;
 
-	int idx0 = 0, idx1 = (int) arr->count - 1, idx_min = -1;
+	int idx0 = 0, idx1 = (int) arr->count - 1, idx_max = -1;
 
-	while(idx0 != idx1) {
+	while(idx0 < idx1-1) {
 		int idx_m = (idx0 + idx1)/2;
 		if(arr->data[idx_m].y > arr->data[idx_m-1].y && arr->data[idx_m].y > arr->data[idx_m+1].y) {
-			idx_min = idx_m; break;
+			idx_max = idx_m; break;
 		}
 
 		if(arr->data[idx_m].y > arr->data[idx_m-1].y) idx0 = idx_m;
 		else idx1 = idx_m;
 	}
 
-	return idx_min;
+	if(idx_max < 0) idx_max = arr->data[idx0].y > arr->data[idx1].y ? idx0 : idx1;
+
+	return idx_max;
 }
 
 Vector2 get_xn(Vector2 d0, Vector2 d1, double m_l, double m_r) {
@@ -172,8 +189,14 @@ double root_finder_monot_deriv_next_x(DataArray2 *arr, bool right_branch) {
 double get_next_x_for_min_search(DataArray2 *arr, int min_idx, double min_diff_ratio, double min_dx) {
 	if(min_idx < 0 || min_idx >= arr->count) min_idx = get_idx_of_unimodal_func_minimum(arr);
 
-	if(min_idx <= 1) return arr->data[0].x + (arr->data[1].x-arr->data[0].x)*min_diff_ratio;
-	if(min_idx >= arr->count-2) return arr->data[arr->count-1].x - (arr->data[arr->count-1].x-arr->data[arr->count-2].x)*min_diff_ratio;
+	if(min_idx <= 1) {
+		if(arr->data[1].x - arr->data[0].x < min_dx) return NAN;
+		return arr->data[0].x + (arr->data[1].x-arr->data[0].x)*min_diff_ratio;
+	}
+	if(min_idx >= arr->count-2) {
+		if(arr->data[arr->count-1].x - arr->data[arr->count-2].x < min_dx) return NAN;
+		return arr->data[arr->count-1].x - (arr->data[arr->count-1].x-arr->data[arr->count-2].x)*min_diff_ratio;
+	}
 
 	Vector2 p0, p1, p2, p3;
 
