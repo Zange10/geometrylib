@@ -30,6 +30,19 @@ double get_single_root_of_line_array(DataArray2 *arr) {
 	return get_x_value_from_y_value_of_line(arr->data[idx0], arr->data[idx1], 0);
 }
 
+double get_single_shifted_root_of_line_array(DataArray2 *arr, double y) {
+	if(!arr || arr->data[0].y > y == arr->data[arr->count-1].y > y) return NAN;
+	int idx0 = 0, idx1 = (int) arr->count-1;
+
+	while(idx1-idx0 > 1) {
+		int idx_m = (idx0 + idx1)/2;
+		if(arr->data[idx_m].y < y == arr->data[idx0].y < y) idx0 = idx_m;
+		else idx1 = idx_m;
+	}
+
+	return get_x_value_from_y_value_of_line(arr->data[idx0], arr->data[idx1], y);
+}
+
 DataArray1 * data_array1_get_diff(DataArray1 *arr) {
 	if(!arr) return NULL;
 	DataArray1 *diff = data_array1_create();
@@ -132,6 +145,32 @@ int get_idx_of_unimodal_func_maximum(DataArray2 *arr) {
 	if(idx_max < 0) idx_max = arr->data[idx0].y > arr->data[idx1].y ? idx0 : idx1;
 
 	return idx_max;
+}
+
+int get_idx_of_func_x(DataArray2 *arr, double x) {
+	if(arr->count == 0) return NAN;
+	if(arr->count == 1) {
+		if(arr->data[0].x == x) return 0;
+		return NAN;
+	}
+
+	if(x < arr->data[0].x || x > arr->data[arr->count-1].x) return NAN;
+
+	int idx0 = 0, idx1 = (int) arr->count - 1, idx_x = -1;
+
+	while(idx0 < idx1-1) {
+		int idx_m = (idx0 + idx1)/2;
+		if(arr->data[idx_m].x <= x && arr->data[idx_m+1].x > x) {
+			idx_x = idx_m; break;
+		}
+
+		if(arr->data[idx_m].y > arr->data[idx_m-1].y) idx0 = idx_m;
+		else idx1 = idx_m;
+	}
+
+	if(idx_x < 0) idx_x = idx0;
+
+	return idx_x;
 }
 
 Vector2 get_xn(Vector2 d0, Vector2 d1, double m_l, double m_r) {

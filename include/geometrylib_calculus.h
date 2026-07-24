@@ -38,6 +38,15 @@ double get_x_value_from_y_value_of_line(Vector2 p0, Vector2 p1, double y);
  */
 double get_single_root_of_line_array(DataArray2 *arr);
 
+/**
+ * @brief Finds the shifted root (shifted by given y) in a 2-dimensional data array that has one root
+ *
+ * @param arr Pointer to the 2-dimensional array
+ * @param y Amount of y to shift the array's y
+ * @return Determined root
+ */
+double get_single_shifted_root_of_line_array(DataArray2 *arr, double y);
+
 
 /*
  * ------------------------------------
@@ -93,6 +102,15 @@ int get_idx_of_unimodal_func_minimum(DataArray2 *arr);
  * @return Index of maximum
  */
 int get_idx_of_unimodal_func_maximum(DataArray2 *arr);
+
+/**
+ * @brief Returns the index of the entry that has an x smaller than the given one with the next entry being bigger
+ *
+ * @param arr Pointer to the 2-dimensional array of (x, y) pairs
+ * @param x Requested x
+ * @return Index of x index (floored)
+ */
+int get_idx_of_func_x(DataArray2 *arr, double x);
 
 /**
  * @brief Returns the next x-value to evaluate during minimum-finding of a unimodal function with a single minimum
