@@ -138,6 +138,43 @@ void data_arrayn_free(DataArrayN *arr);
 
 /*
  * ------------------------------------
+ * Slicing
+ * ------------------------------------
+ */
+
+/**
+ * @brief Returns a slice of the given 1-dimensional array
+ *
+ * @param arr Pointer to the 1-dimensional array
+ * @param start First index (Has to be valid and smaller than valid end)
+ * @param end Last index (If invalid (e.g. -1), set to array maximum)
+ * @return Slice
+ */
+DataArray1 *data_array1_slice(DataArray1 *arr, int start, int end);
+
+/**
+ * @brief Returns a slice of the given 2-dimensional array
+ *
+ * @param arr Pointer to the 2-dimensional array
+ * @param start First index (Has to be valid and smaller than valid end)
+ * @param end Last index (If invalid (e.g. -1), set to array maximum)
+ * @return Slice
+ */
+DataArray2 *data_array2_slice(DataArray2 *arr, int start, int end);
+
+/**
+ * @brief Returns a slice of the given 3-dimensional array
+ *
+ * @param arr Pointer to the 3-dimensional array
+ * @param start First index (Has to be valid and smaller than valid end)
+ * @param end Last index (If invalid (e.g. -1), set to array maximum)
+ * @return Slice
+ */
+DataArray3 *data_array3_slice(DataArray3 *arr, int start, int end);
+
+
+/*
+ * ------------------------------------
  * Get Size
  * ------------------------------------
  */
@@ -220,6 +257,42 @@ Vector3 * data_array3_get_data(DataArray3 *arr);
  */
 double ** data_arrayn_get_data(DataArrayN *arr);
 
+/**
+ * @brief Returns the value at the index of a 1-dimensional array
+ *
+ * @param arr Pointer to the 1-dimensional array
+ * @param idx Index (if invalid (e.g. -1), set to highest value)
+ * @return Value at index
+ */
+double data_array1_get(DataArray1 *arr, int idx);
+
+/**
+ * @brief Returns the value at the index of a 2-dimensional array
+ *
+ * @param arr Pointer to the 2-dimensional array
+ * @param idx Index (if invalid (e.g. -1), set to highest value)
+ * @return Value at index
+ */
+Vector2 data_array2_get(DataArray2 *arr, int idx);
+
+/**
+ * @brief Returns the value at the index of a 3-dimensional array
+ *
+ * @param arr Pointer to the 3-dimensional array
+ * @param idx Index (if invalid (e.g. -1), set to highest value)
+ * @return Value at index
+ */
+Vector3 data_array3_get(DataArray3 *arr, int idx);
+
+/**
+ * @brief Returns the value at the index of a N-dimensional array
+ *
+ * @param arr Pointer to the N-dimensional array
+ * @param idx Index (if invalid (e.g. -1), set to highest value)
+ * @return Value at index
+ */
+double * data_arrayn_get(DataArrayN *arr, int idx);
+
 
 /*
  * ------------------------------------
@@ -290,6 +363,14 @@ int data_array1_idx_from_binary_search(DataArray1 *arr, double value);
  */
 int data_array2_idx_from_binary_search(DataArray2 *arr, Vector2 value);
 
+/**
+ * @brief Returns first index that is bigger than or equal to value (first in x, then in y, then in z)
+ *
+ * @param arr Pointer to the 3-dimensional array
+ * @param value Reference Vector to look for (if y-value is NAN, returns first value with x; if z is NAN, returns first value with x and y)
+ */
+int data_array3_idx_from_binary_search(DataArray3 *arr, Vector3 value);
+
 
 /*
  * ------------------------------------
@@ -311,13 +392,24 @@ void data_array1_insert_new(DataArray1 *arr, double value);
 /**
  * @brief Inserts a new (x, y) entry into a 2-dimensional array while preserving sorted order
  *
- * Assumes the x-values in the array are sorted in ascending order and inserts
+ * Assumes the values in the array are sorted in ascending order (first x, then y) and inserts
  * the new (x, y) pair at the correct position to maintain that order.
  *
  * @param arr Pointer to the 2-dimensional array
  * @param value New entry to insert
  */
 void data_array2_insert_new(DataArray2 *arr, Vector2 value);
+
+/**
+ * @brief Inserts a new (x, y, z) entry into a 3-dimensional array while preserving sorted order
+ *
+ * Assumes the values in the array are sorted in ascending order (first x, then y, then z) and inserts
+ * the new (x, y, z) pair at the correct position to maintain that order.
+ *
+ * @param arr Pointer to the 3-dimensional array
+ * @param value New entry to insert
+ */
+void data_array3_insert_new(DataArray3 *arr, Vector3 value);
 
 
 /*

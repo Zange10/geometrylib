@@ -116,6 +116,87 @@ void data_arrayn_free(DataArrayN* arr) {
 	free(arr);
 }
 
+double data_array1_get(DataArray1 *arr, int idx) {
+	if(arr->count == 0) return NAN;
+	if(idx < 0 || idx > arr->count-1) return arr->data[arr->count-1];
+	return arr->data[idx];
+}
+
+Vector2 data_array2_get(DataArray2 *arr, int idx) {
+	if(arr->count == 0) return vec2(NAN, NAN);
+	if(idx < 0 || idx > arr->count-1) return arr->data[arr->count-1];
+	return arr->data[idx];
+}
+
+Vector3 data_array3_get(DataArray3 *arr, int idx) {
+	if(arr->count == 0) return vec3(NAN, NAN, NAN);
+	if(idx < 0 || idx > arr->count-1) return arr->data[arr->count-1];
+	return arr->data[idx];
+}
+
+double *data_arrayn_get(DataArrayN *arr, int idx) {
+	if(arr->count == 0) return NULL;
+	if(idx < 0 || idx > arr->count-1) return arr->data[arr->count-1];
+	return arr->data[idx];
+}
+
+DataArray1 *data_array1_slice(DataArray1 *arr, int start, int end) {
+	if(start < 0 || start > arr->count-1) return NULL;
+	if(end < 0 || end > arr->count-1) end = (int) arr->count-1;
+	if(start > end) return NULL;
+
+	DataArray1 *slice = data_array1_create();
+	int num_elem = end-start+1;
+
+	if(num_elem > DATA_ARRAY_STACK_LIMIT) {
+		slice->capacity = num_elem;
+		slice->data = malloc(num_elem * sizeof(double));
+		slice->using_heap = true;
+	}
+	memcpy(slice->data, arr->data+start, num_elem*sizeof(double));
+	slice->count = num_elem;
+
+	return slice;
+}
+
+DataArray2 *data_array2_slice(DataArray2 *arr, int start, int end) {
+	if(start < 0 || start > arr->count-1) return NULL;
+	if(end < 0 || end > arr->count-1) end = (int) arr->count-1;
+	if(start > end) return NULL;
+
+	DataArray2 *slice = data_array2_create();
+	int num_elem = end-start+1;
+
+	if(num_elem > DATA_ARRAY_STACK_LIMIT) {
+		slice->capacity = num_elem;
+		slice->data = malloc(num_elem * sizeof(Vector2));
+		slice->using_heap = true;
+	}
+	memcpy(slice->data, arr->data+start, num_elem*sizeof(Vector2));
+	slice->count = num_elem;
+
+	return slice;
+}
+
+DataArray3 *data_array3_slice(DataArray3 *arr, int start, int end) {
+	if(start < 0 || start > arr->count-1) return NULL;
+	if(end < 0 || end > arr->count-1) end = (int) arr->count-1;
+	if(start > end) return NULL;
+
+	DataArray3 *slice = data_array3_create();
+	int num_elem = end-start+1;
+
+	if(num_elem > DATA_ARRAY_STACK_LIMIT) {
+		slice->capacity = num_elem;
+		slice->data = malloc(num_elem * sizeof(Vector3));
+		slice->using_heap = true;
+	}
+	memcpy(slice->data, arr->data+start, num_elem*sizeof(Vector3));
+	slice->count = num_elem;
+
+	return slice;
+}
+
 void check_data_array1_add_capacity(DataArray1 *arr) {
 	if(arr->count >= arr->capacity) {
 		size_t new_capacity = arr->capacity * 2;
@@ -243,6 +324,48 @@ int data_array2_idx_from_binary_search(DataArray2 *arr, Vector2 value) {
 	return ins_idx;
 }
 
+int data_array3_idx_from_binary_search(DataArray3 *arr, Vector3 value) {
+	if(!arr->data || arr->count == 0) return 0;
+	if(value.x < arr->data[0].x) return 0;
+	if(value.x > arr->data[arr->count - 1].x) return (int) arr->count;
+
+	int ins_idx = -1;
+	if(value.x == arr->data[0].x) ins_idx = 0;
+
+	int idx0 = 0, idx1 = (int) arr->count - 1;
+
+	while(ins_idx < 0) {
+		// + 1 to ceil and not floor if necessary (first idx already checked, last index not)
+		int idx_m = (idx0 + idx1 + 1)/2;
+		if(value.x <= arr->data[idx_m].x && value.x > arr->data[idx_m-1].x) {
+			ins_idx = idx_m;
+		}
+
+		if(value.x > arr->data[idx_m].x) idx0 = idx_m;
+		else idx1 = idx_m;
+	}
+
+	if(value.x != arr->data[ins_idx].x) return ins_idx;
+
+	// y values are not binary search as last value of x = value.x is unknown
+	while(ins_idx < arr->count) {
+		if(arr->data[ins_idx].x == value.x && arr->data[ins_idx].y < value.y) {
+			ins_idx++;
+		} else break;
+	}
+
+	if(value.y != arr->data[ins_idx].y) return ins_idx;
+
+	// z values are not binary search as last value of x = value.x && y = value.y is unknown
+	while(ins_idx < arr->count) {
+		if(arr->data[ins_idx].x == value.x && arr->data[ins_idx].y == value.y && arr->data[ins_idx].z < value.z) {
+			ins_idx++;
+		} else break;
+	}
+
+	return ins_idx;
+}
+
 void data_array1_insert_new(DataArray1 *arr, double value) {
 	check_data_array1_add_capacity(arr);
 
@@ -269,6 +392,21 @@ void data_array2_insert_new(DataArray2 *arr, Vector2 value) {
 				(arr->count - insert_index) * sizeof(Vector2));
 	}
 	
+	arr->data[insert_index] = value;
+	arr->count++;
+}
+
+void data_array3_insert_new(DataArray3 *arr, Vector3 value) {
+	check_data_array3_add_capacity(arr);
+
+	int insert_index = data_array3_idx_from_binary_search(arr, value);
+
+	if (insert_index < arr->count) {
+		memmove(&arr->data[insert_index + 1],
+				&arr->data[insert_index],
+				(arr->count - insert_index) * sizeof(Vector3));
+	}
+
 	arr->data[insert_index] = value;
 	arr->count++;
 }
